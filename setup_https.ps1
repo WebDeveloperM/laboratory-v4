@@ -233,8 +233,8 @@ finally {
 }
 
 Write-Host "Tayyor." -ForegroundColor Green
-Write-Host "Frontend: https://${HostIp}:6060"
-Write-Host "Backend API: https://${HostIp}:8050/api/v1"
+Write-Host "Frontend: https://${HostIp}:6020"
+Write-Host "Backend API: https://${HostIp}:8020/api/v1"
 Write-Host "Employee Service: https://${HostIp}:5000"
 if ($usedMkcert) {
     Write-Host "mkcert ishlatildi: brauzerda sertifikat trusted bo'lishi kerak." -ForegroundColor Green

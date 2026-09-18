@@ -46,8 +46,8 @@ PUBLIC_BASE_URL = _normalize_public_base_url(
     os.environ.get('PUBLIC_BASE_URL', ''),
     'https://192.168.101.6',
 )
-BACKEND_PORT = int(os.environ.get('BACKEND_PORT', '8050'))
-FRONTEND_PORT = int(os.environ.get('FRONTEND_PORT', '6060'))
+BACKEND_PORT = int(os.environ.get('BACKEND_PORT', '8020'))
+FRONTEND_PORT = int(os.environ.get('FRONTEND_PORT', '6020'))
 EMPLOYEE_SERVICE_PORT = int(os.environ.get('EMPLOYEE_SERVICE_PORT', '5000'))
 PUBLIC_HOST = urlparse(PUBLIC_BASE_URL).hostname
 FRONTEND_PUBLIC_URL = _build_public_url(PUBLIC_BASE_URL, FRONTEND_PORT)

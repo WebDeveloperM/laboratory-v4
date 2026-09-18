@@ -24,7 +24,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  web:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
@@ -33,7 +33,7 @@ services:
     image: laboratory_backend:latest
     container_name: laboratory_backend
     restart: unless-stopped
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8005"
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8020"
     volumes:
       - .:/app
     env_file:
@@ -60,9 +60,9 @@ services:
     container_name: tb_backend_https
     restart: unless-stopped
     depends_on:
-      - web
+      - backend
     ports:
-      - "8050:443"
+      - "8020:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certs:/etc/nginx/certs:ro

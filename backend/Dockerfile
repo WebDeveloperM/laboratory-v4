@@ -10,6 +10,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     (apt-get update || apt-get update) && apt-get install -y --no-install-recommends \
     -o Acquire::Retries=5 \
+    -o Acquire::http::No-Cache=true \
+    -o Acquire::BrokenProxy=true \
+    -o Acquire::http::Pipeline-Depth=0 \
     libgl1 \
     libglib2.0-0
 
@@ -19,6 +22,6 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . .
 
-EXPOSE 8005
+EXPOSE 8020
 
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8005"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8020"]

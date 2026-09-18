@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: laboratory_frontend
     ports:
-      - "6060:443"
+      - "6020:443"
     volumes:
       - ./certs:/etc/nginx/certs:ro
     extra_hosts:
