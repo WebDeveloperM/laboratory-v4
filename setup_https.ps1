@@ -208,12 +208,6 @@ if (-not (Test-CommandExists "docker")) {
 
 $composeArgs = if ($SkipBuild) { "up -d" } else { "up -d --build" }
 
-Remove-ContainerIfExists -Name "tb_backend"
-Remove-ContainerIfExists -Name "tb_backend_https"
-Remove-ContainerIfExists -Name "tb_employee_service"
-Remove-ContainerIfExists -Name "tb_employee_https"
-Remove-ContainerIfExists -Name "laboratory_frontend"
-
 Write-Host "[3/3] Backend HTTPS containerlari ishga tushirilmoqda..." -ForegroundColor Cyan
 Push-Location $backendDir
 try {
