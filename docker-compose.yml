@@ -1,3 +1,5 @@
+name: laboratory
+
 services:
   backend:
     build:

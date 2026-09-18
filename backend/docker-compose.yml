@@ -1,3 +1,5 @@
+name: laboratory-backend
+
 services:
   employee-service:
     profiles:

@@ -1,9 +1,11 @@
+name: laboratory-frontend
+
 services:
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laboratory_frontend
+    container_name: z
     ports:
       - "6020:443"
     volumes:
