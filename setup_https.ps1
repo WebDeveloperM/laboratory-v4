@@ -58,6 +58,28 @@ function Resolve-HostIpFromEnv {
     }
 }
 
+function Resolve-EmployeeIpFromEnv {
+    param([string]$RootPath)
+
+    $envPath = Join-Path $RootPath ".env"
+    if (-not (Test-Path $envPath)) {
+        return $null
+    }
+
+    $line = Get-Content $envPath | Where-Object { $_ -match '^\s*EMPLOYEE_SERVICE_PUBLIC_URL\s*=' } | Select-Object -First 1
+    if (-not $line) {
+        return $null
+    }
+
+    $value = ($line -split '=', 2)[1].Trim().Trim('"').Trim("'")
+    try {
+        return ([uri]$value).Host
+    }
+    catch {
+        return $null
+    }
+}
+
 function Remove-ContainerIfExists {
     param([string]$Name)
 
@@ -131,7 +153,12 @@ if (-not $HostIp) {
 }
 
 if (-not $HostIp) {
-    $HostIp = "192.168.101.6"
+    $HostIp = "192.168.101.23"
+}
+
+$EmployeeIp = Resolve-EmployeeIpFromEnv -RootPath $root
+if (-not $EmployeeIp) {
+    $EmployeeIp = $HostIp
 }
 
 $usedMkcert = $false
@@ -167,7 +194,7 @@ if (-not $OnlyStart) {
         New-CertWithMkcert -MkcertExe $mkcertExe -KeyPath $frontendKey -CrtPath $frontendCrt -Ip $HostIp
 
         Write-Host "[4/4] Employee Service sertifikat yaratilmoqda (mkcert)..." -ForegroundColor Cyan
-        New-CertWithMkcert -MkcertExe $mkcertExe -KeyPath $employeeKey -CrtPath $employeeCrt -Ip $HostIp
+        New-CertWithMkcert -MkcertExe $mkcertExe -KeyPath $employeeKey -CrtPath $employeeCrt -Ip $EmployeeIp
         $usedMkcert = $true
     }
     elseif ($hasLocalOpenSsl) {
@@ -178,7 +205,7 @@ if (-not $OnlyStart) {
         New-Cert -KeyPath $frontendKey -CrtPath $frontendCrt -Ip $HostIp
 
         Write-Host "[3/3] Employee Service sertifikat yaratilmoqda (local openssl)..." -ForegroundColor Cyan
-        New-Cert -KeyPath $employeeKey -CrtPath $employeeCrt -Ip $HostIp
+        New-Cert -KeyPath $employeeKey -CrtPath $employeeCrt -Ip $EmployeeIp
     }
     else {
         Write-Host "[1/3] Backend sertifikat yaratilmoqda (docker openssl)..." -ForegroundColor Cyan
@@ -188,7 +215,7 @@ if (-not $OnlyStart) {
         New-CertWithDocker -CertDir $frontendCertDir -KeyFile "frontend.key" -CrtFile "frontend.crt" -Ip $HostIp
 
         Write-Host "[3/3] Employee Service sertifikat yaratilmoqda (docker openssl)..." -ForegroundColor Cyan
-        New-CertWithDocker -CertDir $employeeCertDir -KeyFile "employee.key" -CrtFile "employee.crt" -Ip $HostIp
+        New-CertWithDocker -CertDir $employeeCertDir -KeyFile "employee.key" -CrtFile "employee.crt" -Ip $EmployeeIp
     }
 
     Write-Host "Sertifikatlar yaratildi:" -ForegroundColor Green
@@ -229,7 +256,7 @@ finally {
 Write-Host "Tayyor." -ForegroundColor Green
 Write-Host "Frontend: https://${HostIp}:6020"
 Write-Host "Backend API: https://${HostIp}:8020/api/v1"
-Write-Host "Employee Service: https://${HostIp}:5000"
+Write-Host "Employee Service: https://${EmployeeIp}:5000"
 if ($usedMkcert) {
     Write-Host "mkcert ishlatildi: brauzerda sertifikat trusted bo'lishi kerak." -ForegroundColor Green
 }

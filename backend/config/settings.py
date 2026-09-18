@@ -26,7 +26,7 @@ def _normalize_public_base_url(raw_value, fallback):
     value = (raw_value or fallback).strip().rstrip('/')
     parsed = urlparse(value)
     if not parsed.scheme or not parsed.hostname:
-        raise ValueError('PUBLIC_BASE_URL must include scheme and hostname, for example https://192.168.101.6')
+        raise ValueError('PUBLIC_BASE_URL must include scheme and hostname, for example https://192.168.101.23')
     return value
 
 
@@ -44,7 +44,7 @@ def _with_http_and_https(url):
 
 PUBLIC_BASE_URL = _normalize_public_base_url(
     os.environ.get('PUBLIC_BASE_URL', ''),
-    'https://192.168.101.6',
+    'https://192.168.101.23',
 )
 BACKEND_PORT = int(os.environ.get('BACKEND_PORT', '8020'))
 FRONTEND_PORT = int(os.environ.get('FRONTEND_PORT', '6020'))
